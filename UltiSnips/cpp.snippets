@@ -1,0 +1,101 @@
+snippet code "contest template"
+#define ll long long
+
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int main() {
+
+	#ifndef ONLINE_JUDGE
+		freopen("input.txt", "r", stdin);
+		freopen("output.txt", "w", stdout);
+	#endif
+
+	$1
+}
+endsnippet
+
+
+snippet fora "input loop for vector"
+
+for (auto& ${1:x}: $2) cin >> $1;
+
+endsnippet
+
+
+snippet wh "test cases loop"
+int T; cin >> T;
+while (T--) {
+	$1
+
+}
+endsnippet
+
+
+#---------- Data Structures ----------#
+
+### GRAPH
+
+snippet graph "Adjacency matrix input loop"
+/*
+* N -> number of vertices.
+* M -> number of edges given in input.
+*/
+
+int ${1:N}, M;
+cin >> $1 >> M;
+
+vector g($1, vector<int>($1));
+
+for (int i = 0; i < M; i++) {
+	int u, v, w;
+	cin >> u >> v >> w;
+	u--; v--;
+	g[u][v] = g[v][u] = w;
+}
+endsnippet
+
+
+#---------- Algorithms ----------#
+
+
+# Depth First Search (Graph)
+# Can also be used to find the depth of the graph
+
+snippet dfs "Depth First Search"
+vector<bool> vis(${1:N});
+auto dfs = [&](auto self, int u, int sum) -> void {
+	vis[u] = true;
+	ans = max(ans, sum);
+	for (int v = 0; v < $1; v++) {
+
+		/* 
+		*	g[u][v] > 0 speeds up the code by not
+		*	calling dfs for edges whose weights have
+		*	not been defined. Without it, submission
+		*	is sure to give TLE.
+		*/
+
+		if (g[u][v] > 0 && !vis[v]) {
+			//	find maximum depth among adjacent nodes
+			self(self, v, sum + g[u][v]);
+		}
+	}
+
+	/*
+	*	the next line is important to get a global maxima,
+	*	otherwise every node will be marked visited before
+	*	we are able to traverse the maximum depth.
+	*/
+	vis[u] = false;
+};
+
+for (int u = 0; u < $1; u++) {
+	dfs(dfs, u, 0);
+}
+endsnippet
